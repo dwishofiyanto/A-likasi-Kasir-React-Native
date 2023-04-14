@@ -33,23 +33,12 @@ const TambahProduk = ({ navigation }) => {
       alert('Masukkan Nama Produk');
       return;
     }
-    if (!stok) {
-      alert('Masukkan Stok Produk ');
-      return;
-    }
-    if (!harga_beli) {
-      alert('Masukkan Harga Beli / Modal Produk');
-      return;
-    }
-    if (!harga_jual) {
-      alert('Masukkan Harga Jual Produk');
-      return;
-    }
+    
    
     db.transaction(function (tx) {
       tx.executeSql(
-        'INSERT INTO produk ( nama_produk,gambar,barcode,stok,harga_beli,harga_jual,jumlah) VALUES (?,?,?,?,?,?,?)',
-        [nama_produk, gambar, barcode, stok, harga_beli, harga_jual,0],
+        'INSERT INTO penjualan_detail ( id_penjualan,id_produk,harga_beli,harga_jual,jumlah,sub_total,tanggal) VALUES (?,?,?,?,?,?)',
+        [nama_produk, gambar, barcode, stok, harga_beli, harga_jual],
         (tx, results) => {
           console.log('Results', results.rowsAffected);
           if (results.rowsAffected > 0) {
@@ -88,58 +77,8 @@ const TambahProduk = ({ navigation }) => {
                 style={{ padding: 10 }}
               />
               
-              <Text style={styles.text}>Gambar Produk</Text>
-              <Mytextinput
-                placeholder="Masukkan Gambar Produk"
-                onChangeText={
-                  (gambar) => set_gambar(gambar)
-                }
-                style={{ padding: 10 }}
-              />
               
-              <Text style={styles.text}>Barcode Produk</Text>
-              <Mytextinput
-                placeholder="Masukkan Barcode Produk"
-                onChangeText={
-                  (barcode) => set_barcode(barcode)
-                }
-                style={{ padding: 10 }}
-              />
-              
-              <Text style={styles.text}>Stok Produk</Text>
-              <Mytextinput
-                placeholder="Masukkan Stok Produk"
-                onChangeText={
-                  (stok) => set_stok(stok)
-                }
-                maxLength={10}
-                keyboardType="numeric"
-                style={{ padding: 10 }}
-              />
-
-             <Text style={styles.text}>Harga Beli / Modal Produk</Text>
-              <Mytextinput
-                placeholder="Masukkan Harga Beli/Modal Produk"
-                onChangeText={
-                  (harga_beli) => set_harga_beli(harga_beli)
-                }
-                maxLength={10}
-                keyboardType="numeric"
-                style={{ padding: 10 }}
-              />
-
-              <Text style={styles.text}>Haga Jual Produk</Text>
-              <Mytextinput
-                placeholder="Masukkan Harga Jual Produk"
-                onChangeText={
-                  (harga_jual) => set_harga_jual(harga_jual)
-                }
-                maxLength={10}
-                keyboardType="numeric"
-                style={{ padding: 10 }}
-              />
-
-              <Mybutton title="Submit" customClick={register_user} />
+              <Mybutton title="MASUKKAN" customClick={register_user} />
             </KeyboardAvoidingView>
           </ScrollView>
         </View>

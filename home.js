@@ -16,7 +16,10 @@ import TambahProduk from './pages/TambahProduk';
 import DataProduk from './pages/DataProduk';
 import DataProduk1 from './pages/DataProduk1';
 import EditProduk from './pages/EditProduk';
+import Transaksi from './pages/Transaksi';
+import TambahPenjualan from './pages/TambahPenjualan';
 import { FlatList, Text, View, SafeAreaView, Alert, TouchableOpacity } from 'react-native';
+import DataPenjualan from './pages/DataPenjualan';
 const Stack = createNativeStackNavigator();
 
 const App = () => {
@@ -43,34 +46,31 @@ const App = () => {
            
           }}
         />
-        <Stack.Screen
-          name="View"
-          component={ViewUser}
+
+<Stack.Screen
+          name="Transaksi"
+          component={Transaksi}
           options={{
-            title: 'View User', //Set Header Title
-            headerStyle: {
-              backgroundColor: '#f4511e', //Set Header color
-            },
-            headerTintColor: '#fff', //Set Header text color
-            headerTitleStyle: {
-              fontWeight: 'bold', //Set Header text style
-            },
+           
+            headerShown:false,
+          
+           
           }}
         />
+
+
         <Stack.Screen
-          name="ViewAll"
-          component={ViewAllUser}
+          name="TambahPenjualan"
+          component={TambahPenjualan}
           options={{
-            title: 'View Users', //Set Header Title
-            headerStyle: {
-              backgroundColor: '#f4511e', //Set Header color
-            },
-            headerTintColor: '#fff', //Set Header text color
-            headerTitleStyle: {
-              fontWeight: 'bold', //Set Header text style
-            },
+           
+            headerShown:false,
+          
+           
           }}
         />
+       
+       
         <Stack.Screen
           name="Update"
           component={UpdateUser}
@@ -112,6 +112,13 @@ const App = () => {
               fontWeight: 'bold', //Set Header text style
             },
             
+          }}
+        />
+         <Stack.Screen
+          name="DataPenjualan"
+          component={DataPenjualan}
+          options={{
+            headerShown:false,
           }}
         />
         <Stack.Screen
