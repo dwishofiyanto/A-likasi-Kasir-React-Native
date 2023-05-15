@@ -4,9 +4,9 @@
 
 import React, {useState, useEffect} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faFastBackward, faPlus} from '@fortawesome/free-solid-svg-icons';
+import {faArrowLeft, faCircleArrowLeft, faFastBackward, faLeftLong, faPlus} from '@fortawesome/free-solid-svg-icons';
 // import {faBack} from '@fortawesome/free-solid-svg-icons';
-import {faEdit, faTimes} from '@fortawesome/free-solid-svg-icons';
+import {faEdit, faTrash} from '@fortawesome/free-solid-svg-icons';
 import {
   FlatList,
   Image,
@@ -104,12 +104,12 @@ const DataProduk = ({route, navigation}) => {
       //   </View>
       // </View>
       <View style={styles.row}>
-        <View style={[styles.box, styles.box2]}>
+        <View style={[ styles.box2]}>
           <Image
-            style={{width: 100, height: 100}}
+            style={{width: '100%', height: '100%'}}
             resizeMode={'stretch'}
             source={{
-              uri: 'https://images.pexels.com/photos/933054/pexels-photo-933054.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+              uri: 'https://www.bhinneka.com/_next/image?url=https%3A%2F%2Fstatic.bmdstatic.com%2Fgk%2Fproduction%2Fa21b5a8e3d5dec5a8ee674cb73beac89.jpg&w=64&q=75',
             }}
           />
         </View>
@@ -120,12 +120,17 @@ const DataProduk = ({route, navigation}) => {
           <Text>Harga Jual : {item.harga_jual}</Text>
         </View>
         <View style={[styles.box, styles.box3]}>
-          <Text onPress={() => navigation.push('EditProduk', {data: item})}>
-            <FontAwesomeIcon icon={faEdit} color={'orange'} size={25} />
-          </Text>
-          <Text onPress={() => Hapus(item.id)}>
-            <FontAwesomeIcon icon={faTimes} color={'red'} size={25} />
-          </Text>
+          <View>
+            <Text onPress={() => navigation.push('EditProduk', {data: item})}>
+              <FontAwesomeIcon icon={faEdit} color={'skyblue'} size={25} />
+            </Text>
+          </View>
+          <View style={{marginTop:10}}>
+            <Text onPress={() => Hapus(item.id)} >
+              <FontAwesomeIcon icon={faTrash} color={'skyblue'} size={25}  />
+            </Text>
+          </View>
+          
         </View>
       </View>
     );
@@ -156,6 +161,7 @@ const DataProduk = ({route, navigation}) => {
     //   </View>
     // </View>
     <View style={{flex: 1}}>
+      
       <View style={styles.container}>
         <View style={styles.header}>
           {/* <Text style={{ }}>HEADER</Text> */}
@@ -163,10 +169,11 @@ const DataProduk = ({route, navigation}) => {
             <Text onPress={() => navigation.push('HomeScreen')}>
               {' '}
               <FontAwesomeIcon
-                icon={faBackwardStep}
-                color={'orange'}
+                icon={faCircleArrowLeft}
+                color={'white'}
                 size={25}
               />
+              
             </Text>
           </View>
           <View style={[styles.box_header, styles.box_header1]}>
@@ -183,6 +190,7 @@ const DataProduk = ({route, navigation}) => {
           />
         </View>
       </View>
+
       <View style={styles.wrapperButton}>
         <TouchableOpacity
           style={styles.btnTambah}
@@ -300,27 +308,32 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
   row: {
+    margin:5,
+    borderColor:'skyblue',
+    borderWidth:2,
+
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
 
-    backgroundColor: '#f5fffa',
-    borderRadius: 5,
+    // backgroundColor: '#f5fffa',
+    // backgroundColor: 'skyblue',
+    borderRadius: 10,
     marginBottom: 15,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    // shadowColor: '#000',
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 2,
+    // },
+    // shadowOpacity: 0.25,
+    // shadowRadius: 3.84,
 
-    elevation: 5,
+    // elevation: 5,
   },
   box_header: {
     flex: 5,
     height: 40,
-    backgroundColor: '#a9a9a9',
+    backgroundColor: 'skyblue',
     textAlign: 'center',
     color: 'grey',
     alignItems: 'center',
@@ -332,9 +345,12 @@ const styles = StyleSheet.create({
     // backgroundColor: 'red',
   },
   box2: {
-    // backgroundColor: 'black',
+    backgroundColor: 'black',
     alignItems: 'center',
     justifyContent: 'center',
+    // width: '15%',
+    width:100,
+    margin: 5,
   },
   box_header2: {
     flex: 1,
@@ -346,6 +362,7 @@ const styles = StyleSheet.create({
   },
   box_header1: {
     borderBottomRightRadius: 15,
+    
   },
   box3: {
     // backgroundColor: 'blue',
@@ -354,9 +371,11 @@ const styles = StyleSheet.create({
     // justifyContent: 'flex-end',
     justifyContent: 'center',
     alignItems: 'center',
+    marginRight:5,
   },
   two: {
     flex: 2,
+    margin:5,
   },
 
   wrapperButton: {
