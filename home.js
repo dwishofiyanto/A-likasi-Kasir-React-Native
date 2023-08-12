@@ -3,8 +3,8 @@
 
 import * as React from 'react';
 
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import HomeScreen from './pages/HomeScreen';
 import RegisterUser from './pages/RegisterUser';
@@ -13,12 +13,23 @@ import ViewUser from './pages/ViewUser';
 import ViewAllUser from './pages/ViewAllUser';
 import DeleteUser from './pages/DeleteUser';
 import TambahProduk from './pages/TambahProduk';
+import Kamera from './pages/Kamera';
 import DataProduk from './pages/DataProduk';
+
 import DataProduk1 from './pages/DataProduk1';
+// import UploadImage from './pages/UploadImage';
 import EditProduk from './pages/EditProduk';
 import Transaksi from './pages/Transaksi';
+import Export from './pages/Export';
 import TambahPenjualan from './pages/TambahPenjualan';
-import { FlatList, Text, View, SafeAreaView, Alert, TouchableOpacity } from 'react-native';
+import {
+  FlatList,
+  Text,
+  View,
+  SafeAreaView,
+  Alert,
+  TouchableOpacity,
+} from 'react-native';
 import DataPenjualan from './pages/DataPenjualan';
 const Stack = createNativeStackNavigator();
 
@@ -30,47 +41,55 @@ const App = () => {
           name="HomeScreen"
           component={HomeScreen}
           options={{
-           
-            headerShown:false,
-          
-           
+            headerShown: false,
           }}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="EditProduk"
           component={EditProduk}
           options={{
-           
-            headerShown:false,
-          
-           
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="UploadImage"
+          component={Transaksi}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="Export"
+          component={Export}
+          options={{
+            headerShown: false,
           }}
         />
 
-<Stack.Screen
+        <Stack.Screen
           name="Transaksi"
           component={Transaksi}
           options={{
-           
-            headerShown:false,
-          
-           
+            headerShown: false,
           }}
         />
 
+        <Stack.Screen
+          name="Kamera"
+          component={Kamera}
+          options={{
+            headerShown: false,
+          }}
+        />
 
         <Stack.Screen
           name="TambahPenjualan"
           component={TambahPenjualan}
           options={{
-           
-            headerShown:false,
-          
-           
+            headerShown: false,
           }}
         />
-       
-       
+
         <Stack.Screen
           name="Update"
           component={UpdateUser}
@@ -111,34 +130,27 @@ const App = () => {
             headerTitleStyle: {
               fontWeight: 'bold', //Set Header text style
             },
-            
           }}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="DataPenjualan"
           component={DataPenjualan}
           options={{
-            headerShown:false,
+            headerShown: false,
           }}
         />
         <Stack.Screen
           name="LihatProduk"
           component={DataProduk}
           options={{
-           
-            headerShown:false,
-          
-           
+            headerShown: false,
           }}
         />
         <Stack.Screen
           name="LihatProduk1"
           component={DataProduk1}
           options={{
-           
-            headerShown:false,
-          
-           
+            headerShown: false,
           }}
         />
         <Stack.Screen
@@ -155,8 +167,6 @@ const App = () => {
             },
           }}
         />
-
-        
       </Stack.Navigator>
     </NavigationContainer>
   );
