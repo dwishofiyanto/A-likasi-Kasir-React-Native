@@ -47,8 +47,8 @@ export default function Example() {
       )}
     />
      
-     <Modal isVisible={modal_input_penjualan} style={styles.modal}>
-        <View>
+     <Modal isVisible={modal_input_penjualan}>
+        <View style={{ flex: 1, backgroundColor:'white' }}>
           <Text>I am the modal content!</Text>
           <Text onPress={() => proses_input()}>simpan</Text>
           <Text onPress={() => set_modal_input_penjualan(false)}>BATAL</Text>
@@ -85,10 +85,4 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#fff',
   },
-  modal: {
-    backgroundColor: 'white',
-    margin: 0, // This is the important style you need to set
-    alignItems: undefined,
-    justifyContent: undefined,
-  }
 });

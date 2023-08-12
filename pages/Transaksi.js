@@ -259,22 +259,42 @@ class App extends Component {
   };
 
   kurangiPesanan2 = index => {
-    // let dataProduk = this.state.dataProduk;
     let dataPesanan = this.state.dataPesanan;
-    console.log(dataPesanan[index]);
-    if (dataPesanan[index].jumlah > 1) {
-      dataPesanan[index].jumlah--;
-      // dataProduk[index].jumlah--;
-    } else {
-      dataPesanan.splice(index, 1);
-    }
+    var item = dataPesanan.find(item => item.id === index);
+   
+    item.jumlah--;
+ 
+       if (item.jumlah < 1) {
+        dataPesanan.splice(index, 1);
+
+    } 
     this.setState({dataPesanan});
+ 
 
     let sub_total = 0;
     for (let i = 0; i < dataPesanan.length; i++) {
       sub_total += dataPesanan[i].jumlah * dataPesanan[i].harga_jual;
+      //sub_total = sub_total
     }
     this.setState({sub_total});
+    console.log('ddd');
+    // let dataProduk = this.state.dataProduk;
+    // let dataPesanan = this.state.dataPesanan;
+    // var item = dataPesanan.find(item => item.id === index);
+    // // console.log(dataPesanan[index]);
+    // if (dataPesanan[index].jumlah > 1) {
+    //   dataPesanan[index].jumlah--;
+    //   // dataProduk[index].jumlah--;
+    // } else {
+    //   dataPesanan.splice(index, 1);
+    // }
+    // this.setState({dataPesanan});
+
+    // let sub_total = 0;
+    // for (let i = 0; i < dataPesanan.length; i++) {
+    //   sub_total += dataPesanan[i].jumlah * dataPesanan[i].harga_jual;
+    // }
+    // this.setState({sub_total});
   };
 
   render() {
@@ -385,7 +405,7 @@ class App extends Component {
                           borderColor: 'skyblue',
                         }}>
                         <TouchableOpacity style={{flex: 1}}
-                        onPress={() => this.kurangiPesanan2(item.id)}
+                        onPress={() => this.kurangiPesanan(item.id)}
                         >
                           <Text>-</Text>
                         </TouchableOpacity>
