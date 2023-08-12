@@ -230,64 +230,40 @@ const EditProduk = ({route, navigation}) => {
                   style={{padding: 10}}
                 />
 
-                <Text style={styles.text}>Haga Jual Produk</Text>
-                <Mytextinput
-                  placeholder="Masukkan Harga Jual Produk"
-                  value={'' + harga_jual}
-                  onChangeText={harga_jual => set_harga_jual(harga_jual)}
-                  keyboardType="numeric"
-                  style={{padding: 10}}
-                />
-                <Mybutton title="SIMPAN PRODUK" customClick={updateUser} />
-              </KeyboardAvoidingView>
-            </ScrollView>
-          </View>
-          {/* <Text
-            style={{
-              fontSize: 18,
-              textAlign: 'center',
-              color: 'grey',
-            }}>
-            Example of SQLite Database in React Native
-          </Text>
-          <Text
-            style={{
-              fontSize: 16,
-              textAlign: 'center',
-              color: 'grey',
-            }}>
-            www.aboutreact.com
-          </Text> */}
+              <Text style={styles.text}>Haga Jual Produk</Text>
+              <Mytextinput
+                placeholder="Masukkan Harga Jual Produk"
+                value={'' + harga_jual}
+                onChangeText={
+                  (harga_jual) => set_harga_jual(harga_jual)
+                }
+                keyboardType="numeric"
+                style={{ padding: 10 }}
+              />
+              <Mybutton
+                title="SIMPAN PRODUK"
+                customClick={updateUser}
+              />
+            </KeyboardAvoidingView>
+          </ScrollView>
         </View>
-      )}
-
-      
-{scan && (
-            <QRCodeScanner
-              onRead={onSuccess}
-              ref={scanner}
-              // flashMode={RNCamera.Constants.FlashMode.torch}
-              reactivate={true}
-              showMarker={true}
-              //   cameraStyle={{ width: 200, alignSelf:'center'}}
-              bottomContent={
-                <View>
-                  <TouchableOpacity
-                    style={styles.buttonTouchable}
-                    onPress={() => scanner.current.reactive()}>
-                    <Text style={styles.buttonText}>OK. Got it!</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => setScan(false)}>
-                    <Text>Batal</Text>
-                  </TouchableOpacity>
-                </View>
-
-                //   <TouchableOpacity style={styles.buttonTouchable}>
-                //   <Text style={styles.buttonText}>OK. Got it!</Text>
-                // </TouchableOpacity>
-              }
-            />
-          )}
+        <Text
+          style={{
+            fontSize: 18,
+            textAlign: 'center',
+            color: 'grey'
+          }}>
+          Example of SQLite Database in React Native
+        </Text>
+        <Text
+          style={{
+            fontSize: 16,
+            textAlign: 'center',
+            color: 'grey'
+          }}>
+          www.aboutreact.com
+        </Text>
+      </View>
     </SafeAreaView>
   );
 };

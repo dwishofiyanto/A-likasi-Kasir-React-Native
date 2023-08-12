@@ -1,26 +1,5 @@
-import React, {Component, component, useState, Fragment} from 'react';
-// import React, {} from 'react';
-import QRCodeScanner from 'react-native-qrcode-scanner';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-// import Mytextinput from './components/Mytextinput';
-import {
-  faArrowLeft,
-  faBarcode,
-  faCircleArrowLeft,
-  faFastBackward,
-  faLeftLong,
-  faPlus,
-} from '@fortawesome/free-solid-svg-icons';
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  FlatList,
-  Button,
-  TextInput,
-} from 'react-native';
+import React, {Component, component} from 'react';
+import {View, Text, TouchableOpacity, FlatList} from 'react-native';
 import {FlatGrid} from 'react-native-super-grid';
 import {SimpleGrid} from 'react-native-super-grid';
 import {faEdit, faTrash} from '@fortawesome/free-solid-svg-icons';
@@ -30,24 +9,17 @@ var db = openDatabase({name: 'UserDatabase.db'});
 // const pindah = ({ navigation }) => {
 
 //   };
+
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       dataProduk: [],
-
+      id_transaksi:null,
+      invoice:0,
       dataPesanan: [],
       sub_total: 0,
       nomor_urut: 0,
-      bayar: 0,
-      kembali: 0,
-      kembali_fix: 0,
-      kurang: 0,
-      modal_input_penjualan: false,
-      modal_input_bayar: false,
-      scan: false,
-      ScanResult: false,
-      result: null,
     };
     db.transaction(tx => {
       tx.executeSql('SELECT * FROM produk', [], (tx, results) => {
@@ -57,6 +29,19 @@ class App extends Component {
         }
         this.setState({
           dataProduk: temp,
+        });
+      });
+    });
+
+    db.transaction(tx => {
+      tx.executeSql('SELECT * from transaksi order by id desc limit 1', [], 
+      (tx, results) => {
+        var temp = [];
+        for (let i = 0; i < results.rows.length; ++i) {
+          temp.push(results.rows.item(i));
+        }
+        this.setState({
+          id_transaksi: temp,
         });
       });
     });
@@ -148,9 +133,24 @@ class App extends Component {
     this.setState({modal_input_penjualan: true});
   }
   tampil_modal_input_bayar() {
+    var data_invoice = this.state.id_transaksi;
+    if(data_invoice == "")
+    {
+      this.setState({invoice: 1});
+     
+    }
+    else
+    {
+      var item_produk = data_invoice.find(item => item.id >= 0);
+    var nomor_invoice = item_produk.id + 1;
+    this.setState({invoice: nomor_invoice});
+  
+    }
+   // var item_produk = dataProduk.find(item => item.barcode === e.data);
+   
     this.setState({modal_input_bayar: true});
+    //console.log(this.state.invoice);
   }
-
   componentDidMount() {
     let sub_total = this.state.sub_total;
     let dataProduk = this.state.dataProduk;
@@ -203,7 +203,55 @@ class App extends Component {
     this.setState({sub_total});
     this.setState({modal_input_penjualan: false});
   };
-
+  onDeleteBTN () {
+   console.log('ok');
+}
+  proses_input () {
+   // alert('pross');
+   var invoice = this.state.invoice;
+   var nama_pembeli = this.state.nama_pembeli;
+   var total_harga = this.state.sub_total;
+   var bayar = this.state.bayar;
+  //  this.state = {pesan:"pertama default"};
+  //  var pesan = 10;
+  //  var [state, setState] = usestate("old value");
+    db.transaction(function (tx) {
+      tx.executeSql(
+        'INSERT INTO transaksi ( id,invoice,nama_pelanggan,total_harga,total_diskon,bayar,tanggal) VALUES (?,?,?,?,?,?,?)',
+        [
+          invoice,
+          invoice,
+          nama_pembeli,
+          total_harga,
+          0,
+          bayar,
+          3,
+          
+        ],
+        (tx, results) => {
+          console.log('Results', results.rowsAffected);
+         
+          // if (results.rowsAffected > 0) {
+          //   this.setState({pesan: "prosws simpan nota berhasil"});
+          // } else 
+          // {
+          //   this.setState({pesan: "prosws simpan nota berhasil"});
+          // }
+          var temp = 9
+          this.setState({pesan: temp,});
+          // this.setState({
+          //   id_transaksi: temp,
+          // });
+        },
+      );
+      
+    });
+ 
+    // this.setState({pesan: "prosws simpan nota berhasil"})
+    this.setState({modal_input_bayar: false});
+    this.setState({modal_nota: true});
+   //  console.log(this.state.count);
+  };
   tambahPesanan2 = index => {
     let dataPesanan = this.state.dataPesanan;
     var item = dataPesanan.find(item => item.id === index);
@@ -286,312 +334,86 @@ class App extends Component {
 
     return (
       <View style={{flex: 1}}>
-        {!scan && (
-          // <Text>
-          //   {result && <Text>{JSON.stringify(result, null, 2)}</Text>}
-          //   <TouchableOpacity
-          //     onPress={this.scanAgain}
-          //     style={styles.buttonTouchable}>
+        <FlatGrid
+          itemDimension={130}
+          data={this.state.dataProduk
+            .slice()
+            .sort((a, b) => a.harga_jual - b.harga_jual)}
+          // data={this.state.dataProduk}
 
-          //   </TouchableOpacity>
-
-          // </Text>
-
-          <View style={styles.container}>
-            <View style={styles.rowm}>
-              <View style={[styles.boxm, styles.box2m]}>
-                <Text
-                  onPress={() => this.props.navigation.navigate('HomeScreen')}>
-                  {' '}
-                  <FontAwesomeIcon
-                    icon={faCircleArrowLeft}
-                    color={'skyblue'}
-                    size={25}
-                  />
-                </Text>
-              </View>
-              <View style={[styles.boxm, styles.box3m]}>
-                {/* {result &&  <Text>R{result.data}</Text>} */}
-
-                <TextInput
-                  placeholder="Barcode"
-                  keyboardType="numeric"
-                  value={this.state.result}
-                  style={{
-                    padding: 5,
-                    borderColor: 'skyblue',
-                    borderRadius: 15,
-                    borderWidth: 1,
-                  }}
-                />
-              </View>
-              <View style={[styles.boxm, styles.twom]}>
-                <View style={[styles.boxm, styles.isi_twom]}>
-                  <TouchableOpacity
-                    style={styles.btnTambah}
-                    onPress={this.scanAgain}>
-                    <FontAwesomeIcon
-                      icon={faBarcode}
-                      size={20}
-                      color={'white'}
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.btnTambah}
-                    onPress={() =>
-                      this.setState({modal_input_penjualan: true})
-                    }>
-                    <FontAwesomeIcon icon={faPlus} size={20} color={'white'} />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-            <View style={styles.list_produk}>
-              <FlatList
-                data={this.state.dataPesanan
-                  .slice()
-                  .sort((a, b) => b.nomor_urut - a.nomor_urut)}
-                renderItem={({item, index}) => (
-                  <View style={styles.row}>
-                    <View style={[styles.box2]}>
-                      <Image
-                        style={{width: '100%', height: '100%'}}
-                        resizeMode={'stretch'}
-                        source={{
-                          uri: 'https://www.bhinneka.com/_next/image?url=https%3A%2F%2Fstatic.bmdstatic.com%2Fgk%2Fproduction%2Fa21b5a8e3d5dec5a8ee674cb73beac89.jpg&w=64&q=75',
-                        }}
-                      />
-                    </View>
-                    <View style={[styles.box, styles.two]}>
-                      <Text>{item.nama_produk}</Text>
-                      <Text>
-                        {'Rp ' +
-                          item.harga_jual
-                            .toString()
-                            .replace(/\B(?=(\d{3})+(?!\d))/g, '.') +
-                          ' x ' +
-                          item.jumlah}
-                      </Text>
-                      <Text>
-                        Total Harga :{' '}
-                        {(item.harga_jual * item.jumlah)
-                          .toString()
-                          .replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
-                      </Text>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          borderWidth: 2,
-                          borderColor: 'skyblue',
-                        }}>
-                        <TouchableOpacity style={{flex: 1}}
-                        onPress={() => this.kurangiPesanan2(item.id)}
-                        >
-                          <Text>-</Text>
-                        </TouchableOpacity>
-                        <Text style={{flex: 1}}>{item.jumlah}</Text>
-                        <TouchableOpacity
-                          style={{flex: 1}}
-                          onPress={() => this.tambahPesanan2(item.id)}>
-                          <Text>+</Text>
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-                    <View style={[styles.box, styles.box3]}>
-                      <View></View>
-                      <View style={{marginTop: 10}}>
-                        <Text onPress={() => this.hapusPesanan(item.id)}>
-                          <FontAwesomeIcon
-                            icon={faTrash}
-                            color={'skyblue'}
-                            size={25}
-                          />
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                )}
-              />
-            </View>
-
-            <Modal
-              isVisible={this.state.modal_input_penjualan}
-              style={styles.modal}>
-              <View>
-                <FlatList
-                  data={this.state.dataProduk
-                    .slice()
-                    .sort((a, b) => a.harga_jual - b.harga_jual)}
-                  renderItem={({item, index}) => (
-                    <View>
-                      <Text>{item.nama_produk}</Text>
-                      <Text>
-                        {item.harga_jual
-                          .toString()
-                          .replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
-                      </Text>
-
-                      <View style={{flexDirection: 'row'}}>
-                        <TouchableOpacity style={{flex: 1}}>
-                          <Text>-</Text>
-                        </TouchableOpacity>
-                        <Text style={{flex: 1}}>{item.jumlah}</Text>
-                        <TouchableOpacity
-                          style={{flex: 1}}
-                          onPress={() => this.tambahPesanan1(item.id)}>
-                          <Text>+</Text>
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-                  )}
-                />
-                <Text onPress={() => proses_input()}>simpan</Text>
-                <Text
-                  onPress={() => this.setState({modal_input_penjualan: false})}>
-                  BATAL
-                </Text>
-              </View>
-            </Modal>
-            <Modal
-              isVisible={this.state.modal_input_bayar}
-              style={styles.modal}>
-              <View>
-                <FlatList
-                  data={this.state.dataPesanan
-                    .slice()
-                    .sort((a, b) => a.harga_jual - b.harga_jual)}
-                  renderItem={({item, index}) => (
-                    <View>
-                      <Text>{item.nama_produk}</Text>
-                      <Text>
-                        {'Rp ' +
-                          item.harga_jual
-                            .toString()
-                            .replace(/\B(?=(\d{3})+(?!\d))/g, '.') +
-                          ' x ' +
-                          item.jumlah +
-                          ' Rp ' +
-                          (item.harga_jual * item.jumlah)
-                            .toString()
-                            .replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
-                      </Text>
-                    </View>
-                  )}
-                />
-                <Text>TOTAL {this.state.sub_total}</Text>
-                <Text>Nama Pembeli</Text>
-                <TextInput
-                  placeholder="Nama Pembeli"
-                  style={{
-                    padding: 5,
-                    borderColor: 'skyblue',
-                    borderRadius: 15,
-                    borderWidth: 1,
-                  }}
-                />
-                <Text>Bayar</Text>
-                <TextInput
-                  placeholder="Input Bayar"
-                  keyboardType="numeric"
-                  value={
-                    '' +
-                    this.state.bayar
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, '.')
-                  }
-                  onChangeText={e => {
-                    var bayar = e.replace(/[^a-zA-Z0-9 ]/g, '');
-                    kembali = bayar - this.state.sub_total;
-                    kurang = bayar - this.state.sub_total;
-                    if (kembali < 0) {
-                      this.setState({kembali: 0});
-                    } else {
-                      this.setState({kembali});
-                    }
-                    if (kurang > 0) {
-                      this.setState({kurang: 0});
-                    } else {
-                      this.setState({kurang});
-                    }
-                   
-
-                    this.setState({bayar: bayar});
-
-                    
-                  }}
-                  style={{
-                    padding: 5,
-                    borderColor: 'skyblue',
-                    borderRadius: 15,
-                    borderWidth: 1,
-                  }}
-                />
-                <Text>Kembali</Text>
-                <TextInput
-                  keyboardType="numeric"
-                  value={
-                    '' +
-                    this.state.kembali
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, '.')
-                  }
-                  style={{
-                    padding: 5,
-                    borderColor: 'skyblue',
-                    borderRadius: 15,
-                    borderWidth: 1,
-                  }}
-                />
-                <Text>
-                  Kurang{' '}
-                  {this.state.kurang
-                    .toString()
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
-                </Text>
-                <Text onPress={() => proses_input()}>simpan</Text>
-                <Text onPress={() => this.setState({modal_input_bayar: false})}>
-                  BATAL
-                </Text>
-              </View>
-            </Modal>
-            <Button
-              color={'blue'}
-              onPress={() =>
-                this.tampil_modal_input_bayar(this.state.dataPesanan)
-              }
-              title={
-                'BAYAR Rp ' +
-                this.state.sub_total
+          renderItem={({item, index}) => (
+            <View>
+              {/* <Text>{index}</Text> */}
+              <Text>{item.nama_produk}</Text>
+              <Text>
+                {item.harga_jual
                   .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, '.')
-              }
-            />
-          </View>
-        )}
-        {scan && (
-          <QRCodeScanner
-            onRead={this.onSuccess}
-            ref={node => {
-              this.scanner = node;
-            }}
-            // flashMode={RNCamera.Constants.FlashMode.torch}
-            reactivate={true}
-            showMarker={true}
-            //   cameraStyle={{ width: 200, alignSelf:'center'}}
-            bottomContent={
-              <View>
-                <TouchableOpacity
-                  style={styles.buttonTouchable}
-                  onPress={() => this.scanner.reactivate()}>
-                  <Text style={styles.buttonText}>OK. Got it!</Text>
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
+              </Text>
+
+              <View style={{flexDirection: 'row'}}>
+                <TouchableOpacity style={{flex: 1}}>
+                  <Text>-</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.setState({scan: false})}>
-                  <Text>Batal</Text>
+                <Text style={{flex: 1}}>{item.jumlah}</Text>
+                <TouchableOpacity
+                  style={{flex: 1}}
+                  onPress={() => this.tambahPesanan1(item.id)}>
+                  <Text>+</Text>
                 </TouchableOpacity>
               </View>
-            }
-          />
-        )}
+            </View>
+          )}
+        />
+        <Text onPress={() => this.props.navigation.navigate('HomeScreen')}>
+          KEMBALI
+        </Text>
+        <Text>Data Pesanan</Text>
+        {/* arrayContoh.slice().sort((a, b) => b.like - a.like) */}
+        <FlatList
+          itemDimension={130}
+          // data={this.state.dataPesanan}
+          data={this.state.dataPesanan
+            .slice()
+            .sort((a, b) => b.nomor_urut - a.nomor_urut)}
+          renderItem={({item, index}) => (
+            <View>
+              {/* <Text>{index}</Text> */}
+              <Text>{item.nama_produk}</Text>
+              <Text>
+                {item.harga_jual
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
+              </Text>
+              <Text>{index}</Text>
+              <View style={{flexDirection: 'row'}}>
+                <TouchableOpacity
+                  style={{flex: 1}}
+                  onPress={() => this.kurangiPesanan(item.id)}>
+                  <Text>-</Text>
+                </TouchableOpacity>
+                <Text style={{flex: 1}}>{item.jumlah}</Text>
+                <TouchableOpacity
+                  style={{flex: 1}}
+                  onPress={() => this.tambahPesanan2(item.id)}>
+                  <Text>+</Text>
+                </TouchableOpacity>
+              </View>
+              <Text>
+                Total Harga :{' '}
+                {(item.harga_jual * item.jumlah)
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
+              </Text>
+            </View>
+          )}
+        />
+        <Text>
+          Sub totoal{' '}
+          {this.state.sub_total
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
+        </Text>
       </View>
     );
   }
